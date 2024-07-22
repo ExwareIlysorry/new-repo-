@@ -1,0 +1,64 @@
+-- Key and script URL
+local correctKey = "Drizzy"
+local scriptURL = "https://raw.githubusercontent.com/blix200/Hey-there-/main/Stop%20it%20%3A("
+
+-- Create GUI elements
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextBox = Instance.new("TextBox")
+local TextButton = Instance.new("TextButton")
+local ErrorLabel = Instance.new("TextLabel")
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+Frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+Frame.Size = UDim2.new(0, 200, 0, 100)
+
+TextBox.Parent = Frame
+TextBox.BackgroundColor3 = Color3.new(1, 1, 1)
+TextBox.Position = UDim2.new(0.1, 0, 0.2, 0)
+TextBox.Size = UDim2.new(0.8, 0, 0.3, 0)
+TextBox.PlaceholderText = "Enter Key"
+
+TextButton.Parent = Frame
+TextButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+TextButton.Position = UDim2.new(0.1, 0, 0.6, 0)
+TextButton.Size = UDim2.new(0.8, 0, 0.3, 0)
+TextButton.Text = "Submit"
+
+ErrorLabel.Parent = Frame
+ErrorLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+ErrorLabel.Position = UDim2.new(0.1, 0, 0.9, 0)
+ErrorLabel.Size = UDim2.new(0.8, 0, 0.1, 0)
+ErrorLabel.TextColor3 = Color3.new(1, 0, 0)
+ErrorLabel.Text = ""
+ErrorLabel.Visible = false
+
+-- Function to load the script
+local function loadScript()
+    local success, response = pcall(function()
+        return loadstring(game:HttpGet(scriptURL))()
+    end)
+    
+    if success then
+        print("Script loaded successfully.")
+    else
+        warn("Failed to load the script: " .. tostring(response))
+    end
+end
+
+-- Button click event
+TextButton.MouseButton1Click:Connect(function()
+    local enteredKey = TextBox.Text:match("^%s*(.-)%s*$") -- Trim leading and trailing whitespace
+    
+    if enteredKey == correctKey then
+        ErrorLabel.Visible = false
+        ScreenGui:Destroy() -- Close the GUI
+        loadScript() -- Load the script
+    else
+        ErrorLabel.Text = "Incorrect key!"
+        ErrorLabel.Visible = true
+    end
+end)
